@@ -33,11 +33,14 @@ $(document).on('click','.editTask',function() {
     var inputVal = $('#on').text();
     $('#inputValue').val(inputVal);
     $('#on').hide();
-    
+
     // カーソルが外れたら、確定
     $('#inputValue').blur(function(){
       if($('#inputValue').val().length === 0) {
-        return;
+      $('#editForm').remove();
+      $('#on').show();
+      $('#on > span').text(inputVal);
+      $('p').removeAttr('id');
       };
       var value = $('#inputValue').val();
       $('#editForm').remove();
@@ -48,14 +51,16 @@ $(document).on('click','.editTask',function() {
   }
 });
 // 確定ボタンを押すと上書きされる
-$(document).on('click','#confirm' ,function(){
-  if($('#inputValue').val().length === 0) {
-    return;
-  };
-  var value = $('#inputValue').val();
-  $('#editForm').remove();
-  $('#on').show();
-  $('#on > span').text(value);
-  $('p').removeAttr('id');
-});
+// $(document).on('click','#confirm' ,function(){
+//   if($('#inputValue').val().length === 0) {
+//     $('#editForm').remove();
+//       $('p').removeAttr('id');
+//       $('#on').show(inputVal);
+//   };
+//   var value = $('#inputValue').val();
+//   $('#editForm').remove();
+//   $('#on').show();
+//   $('#on > span').text(value);
+//   $('p').removeAttr('id');
+// });
 

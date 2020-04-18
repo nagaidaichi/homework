@@ -1,3 +1,12 @@
 p {
   margin: 0;
 }
+.task {
+  border: 1px solid;
+  width: 112px;
+  overflow-wrap: break-word;
+}
+
+[draggable] {
+  user-select: none;
+}

@@ -27,7 +27,7 @@ function taskContentRenderer(content) {
 function setTodoItemToLocalStorage(content) {
   var storageItem = localStorage.getItem(STORAGE_KEY);
   var nextStorageItem = storageItem ? `${storageItem},${content}` : content;
-  localStorage.setItem(STORAGE_KEY,nextStorageItem);
+  localStorage.setItem(STORAGE_KEY, nextStorageItem);
 }
 
 $(document).on('click','#add',function() {
@@ -47,10 +47,23 @@ $(document).on('click','#add',function() {
 });
 
 // タスクを削除する
+function removeTaskFromLocalStorage(index){
+  var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+  console.log(storageItem.length);
+  storageItem.length === 1 ? (
+    localStorage.removeItem(STORAGE_KEY)
+  ):(
+    storageItem.splice(index,1),
+    localStorage.setItem(STORAGE_KEY, storageItem)
+  );
+};
 
-$(document).on('click','.delButton',function() {
+$(document).on('click','.delButton',function(e) {
   var taskItem = $(this).parent('p');
+  var index = $('.task').index(taskItem);
   taskItem.remove();
+
+  removeTaskFromLocalStorage(index);
 });
 
 //全削除
@@ -66,8 +79,8 @@ $(document).on('click','.edit',function() {
   var todoContent = $(this).prev();
   var inputVal = todoContent.text();
   todoContent.hide();
-  var editForm = 
-    `<div id="editForm_${index}">
+  var editForm = `
+    <div id="editForm_${index}">
       <input type="text" id="inputValue_${index}">
       <input type="button" id="confirm" value="確定" onclick="submitTodo(event)">
     </div>`;
@@ -92,7 +105,6 @@ function submitTodo(e) {
 };
 
 // ドラッグアンドドロップ
-var src = null;
 function dragStarted(e) {
   src = e.target;
   e.dataTransfer.effectAllowed = "move";
@@ -121,7 +133,7 @@ $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {
     var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
     storageItem.forEach(function(item){
-    taskContentRenderer(item);
+      taskContentRenderer(item);
     });
   }
 });

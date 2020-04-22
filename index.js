@@ -23,7 +23,6 @@ function taskContentRenderer(content) {
   $('#listItem').append(taskElement);
 }
 
-
 function setTodoItemToLocalStorage(content) {
   var storageItem = localStorage.getItem(STORAGE_KEY);
   var nextStorageItem = storageItem ? `${storageItem},${content}` : content;
@@ -31,7 +30,7 @@ function setTodoItemToLocalStorage(content) {
 }
 
 $(document).on('click','#add',function() {
-  //入力内容があるかどうかのチェック
+
   var content = $('#inputTodo').val();
   if(content.length === 0) {
     return;
@@ -41,15 +40,12 @@ $(document).on('click','#add',function() {
 
   setTodoItemToLocalStorage(content)
 
-  //入力内容を空白にする
   $('#inputTodo').val("");
   $('#inputTodo').focus();
 });
 
-// タスクを削除する
-function removeTaskFromLocalStorage(index){
+function removeTodoItemFromLocalStorage(index){
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  console.log(storageItem.length);
   storageItem.length === 1 ? (
     localStorage.removeItem(STORAGE_KEY)
   ):(
@@ -57,18 +53,20 @@ function removeTaskFromLocalStorage(index){
     localStorage.setItem(STORAGE_KEY, storageItem)
   );
 };
-
+// タスクを削除する
 $(document).on('click','.delButton',function(e) {
   var taskItem = $(this).parent('p');
   var index = $('.task').index(taskItem);
   taskItem.remove();
 
-  removeTaskFromLocalStorage(index);
+  removeTodoItemFromLocalStorage(index);
 });
 
 //全削除
 $(document).on('click','#reset',function(){
+
   localStorage.removeItem(STORAGE_KEY);
+
   $('.task').remove();
   $('#inputTodo').focus();
 });
@@ -77,7 +75,7 @@ $(document).on('click','#reset',function(){
 $(document).on('click','.edit',function() {
   var index = $('.task').index($(this).parent());
   var todoContent = $(this).prev();
-  var inputVal = todoContent.text();
+  var inputVal = todoContent.text().trim();
   todoContent.hide();
   var editForm = `
     <div id="editForm_${index}">
@@ -90,18 +88,37 @@ $(document).on('click','.edit',function() {
   $(editFormInput).val(inputVal);
 });
 
+function editLocalStorage(index,value,prevElement) {
+  var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+  $(prevElement).val() ? (
+  storageItem.splice(index,1,value),
+  localStorage.setItem(STORAGE_KEY,storageItem)
+  ): false;
+}
+
+function confirmed(editTask,value,target) {
+  $(editTask).text(value);
+  $(target).parent().remove();
+  $(editTask).show();
+}
+
 // 編集したTODOを確定させる
 function submitTodo(e) {
   var target = e.target;
   var value = $(target).prev().val();
+  
+  // 追加
+  var thisParent = $(target).closest('.task');
+  var index = $('.task').index(thisParent);
+  var prevElement = $(target).prev();
+  editLocalStorage(index,value,prevElement);
+
   if(value.length === 0) {
-    return;
+    return ;
   };
 
   var editTask = $(target).parent().next();
-  $(editTask).text(value);
-  $(target).parent().remove();
-  $(editTask).show();
+  confirmed(editTask,value,target);
 };
 
 // ドラッグアンドドロップ

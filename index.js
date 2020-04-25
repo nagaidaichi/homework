@@ -5,15 +5,16 @@ function taskContentRenderer(content) {
    `ondragstart="dragStarted(event)"
     ondragenter="dragEnterd(event)"
     ondragover="draggingOver(event)"
-    ondrop="dropped(event)"`;
+    ondrop="dropped(event)"
+    `;
 
   var taskContent =
-    `<span class="editTask" draggable="true" ${dragAndDropIvent}> 
+    `<span class="editTask"> 
       ${content}
     </span>` 
 
   var taskElement =
-  `<p class="task">
+  `<p class="task" draggable="true" ${dragAndDropIvent}>
     <input type="button" class="delButton" value="削除" >
     ${taskContent}
     <input type="button" class="edit" value="編集">
@@ -30,7 +31,6 @@ function setTodoItemToLocalStorage(content) {
 }
 
 $(document).on('click','#add',function() {
-
   var content = $('#inputTodo').val();
   if(content.length === 0) {
     return;
@@ -54,7 +54,7 @@ function removeTodoItemFromLocalStorage(index){
   );
 };
 // タスクを削除する
-$(document).on('click','.delButton',function(e) {
+$(document).on('click','.delButton',function() {
   var taskItem = $(this).parent('p');
   var index = $('.task').index(taskItem);
   taskItem.remove();
@@ -106,8 +106,7 @@ function confirmed(editTask,value,target) {
 function submitTodo(e) {
   var target = e.target;
   var value = $(target).prev().val();
-  
-  // 追加
+
   var thisParent = $(target).closest('.task');
   var index = $('.task').index(thisParent);
   var prevElement = $(target).prev();
@@ -141,9 +140,8 @@ function dropped(e) {
   e.preventDefault();
   e.stopPropagation();
   src.innerHTML = e.target.innerHTML;
-  e.target.innerHTML = e.dataTransfer.getData("text/html");
+  e.target = e.dataTransfer.getData("text/html");
   src = null;
-  console.log("ok");
 }
 
 $(function(){

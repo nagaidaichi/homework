@@ -3,10 +3,8 @@ p {
 }
 .task {
   border: 1px solid;
-  width: 112px;
-  overflow-wrap: break-word;
 }
 
-[draggable] {
+/* [draggable] {
   user-select: none;
-}
+} */

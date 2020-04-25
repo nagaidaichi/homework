@@ -148,6 +148,20 @@ function dropped(e) {
   src = null;
 }
 
+// 検索(TODO絞り込み)
+$('#searchForm').change(function(){
+  var searchValue = $(this).val();
+  $('.task .editTask').each(function(){
+    var todoValue = $(this).text();
+    if (todoValue.indexOf(searchValue) !== -1){
+      // 検索にヒットした場合の処理
+    } else {
+      // 検索にヒットしなかった場合の処理
+      $(this).parent().hidden();
+    }
+  });
+});
+
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {
     var storageItem = localStorage.getItem(STORAGE_KEY).split(',');

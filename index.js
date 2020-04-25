@@ -46,20 +46,20 @@ $(document).on('click','#add',function() {
 
 function removeTodoItemFromLocalStorage(index){
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  storageItem.length === 1 ? (
-    localStorage.removeItem(STORAGE_KEY)
-  ):(
-    storageItem.splice(index,1),
-    localStorage.setItem(STORAGE_KEY, storageItem)
-  );
+  storageItem.splice(index, 1);
+  localStorage.setItem(STORAGE_KEY, storageItem);
+
+  if (!storageItem.length) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 };
+
 // タスクを削除する
 $(document).on('click','.delButton',function() {
   var taskItem = $(this).parent('p');
   var index = $('.task').index(taskItem);
-  taskItem.remove();
-
   removeTodoItemFromLocalStorage(index);
+  taskItem.remove();
 });
 
 //全削除
@@ -88,37 +88,35 @@ $(document).on('click','.edit',function() {
   $(editFormInput).val(inputVal);
 });
 
-function editLocalStorage(index,value,prevElement) {
+// 編集したTODOを確定させる
+function submitTodo(e) {
+  var target = e.target;
+  var editFormValue = $(target).prev().val();
+  if(editFormValue.length === 0) {
+    return ;
+  };
+  var targetListElement = $(target).closest('.task');
+  var editTaskClassElement = $(target).parent().next();
+  var index = $('.task').index(targetListElement);
+  editTaskInLocalStorage(index,editFormValue);
+  editTaskInView(editTaskClassElement,editFormValue,target);
+};
+
+function editTaskInLocalStorage(index,value) {
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  $(prevElement).val() ? (
-  storageItem.splice(index,1,value),
-  localStorage.setItem(STORAGE_KEY,storageItem)
-  ): false;
+  if (value) {
+    storageItem.splice(index, 1, value);
+    localStorage.setItem(STORAGE_KEY, storageItem);
+  }
+
+  return;
 }
 
-function confirmed(editTask,value,target) {
+function editTaskInView(editTask,value,target) {
   $(editTask).text(value);
   $(target).parent().remove();
   $(editTask).show();
 }
-
-// 編集したTODOを確定させる
-function submitTodo(e) {
-  var target = e.target;
-  var value = $(target).prev().val();
-
-  var thisParent = $(target).closest('.task');
-  var index = $('.task').index(thisParent);
-  var prevElement = $(target).prev();
-  editLocalStorage(index,value,prevElement);
-
-  if(value.length === 0) {
-    return ;
-  };
-
-  var editTask = $(target).parent().next();
-  confirmed(editTask,value,target);
-};
 
 // ドラッグアンドドロップ
 function dragStarted(e) {
@@ -139,8 +137,14 @@ function draggingOver(e) {
 function dropped(e) {
   e.preventDefault();
   e.stopPropagation();
-  src.innerHTML = e.target.innerHTML;
-  e.target = e.dataTransfer.getData("text/html");
+  var target = e.target;
+  var parent = $(target).parent();
+  var sourceIndex = $('.task').index(src); // 移動元のTODOのインデックス
+  var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス
+  
+  // TODO: valueだけを書き換えるようにしたい
+  src.innerHTML = target.innerHTML;
+  target = e.dataTransfer.getData("text/html");
   src = null;
 }
 

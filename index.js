@@ -119,10 +119,10 @@ function editTaskInView(editTask,value,target) {
 }
 
 // ドラッグアンドドロップ
-function dragStarted(e) {
-  src = e.target;
+function dragStarted(e) { //e.targetは<p .task>
+  src = e.target.querySelector('span');
   e.dataTransfer.effectAllowed = "move";
-  e.dataTransfer.setData("text/html",e.target.innerHTML);
+  e.dataTransfer.setData("text",src.textContent.trim());
 }
 
 function dragEnterd(e) {
@@ -135,18 +135,33 @@ function draggingOver(e) {
 }
 
 function dropped(e) {
+  var target = e.target;
+  if(!$(target).text()) { //input要素の上にドロップしたとき
+    src = null;
+    return;
+  } else if(target.querySelector('span')) { //p要素（右側の空白部分）にドロップしたとき
+    src = null;
+    return;
+  }
   e.preventDefault();
   e.stopPropagation();
-  var target = e.target;
   var parent = $(target).parent();
-  var sourceIndex = $('.task').index(src); // 移動元のTODOのインデックス
+  var sourceIndex = $('.task').index($(src).parent()); // 移動元のTODOのインデックス
   var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス
+  var sourceValue = src.textContent.trim();
+  var destinationValue = target.textContent.trim();
+  var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+  storageItem.splice(sourceIndex, 1, destinationValue);
+  storageItem.splice(destinationIndex, 1, sourceValue);
+  localStorage.setItem(STORAGE_KEY, storageItem);
+
   
   // TODO: valueだけを書き換えるようにしたい
-  src.innerHTML = target.innerHTML;
-  target = e.dataTransfer.getData("text/html");
+  src.textContent = target.textContent.trim();
+  target.textContent = e.dataTransfer.getData("text");
   src = null;
 }
+
 
 // 検索(TODO絞り込み)
 $('#searchForm').change(function(){

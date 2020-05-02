@@ -15,9 +15,10 @@ function taskContentRenderer(content) {
 
   var taskElement =
   `<p class="task" draggable="true" ${dragAndDropIvent}>
-    <input type="button" class="delButton" value="削除" >
+    <p style="display: inline-block">▽</p>
     ${taskContent}
     <input type="button" class="edit" value="編集">
+    <input type="button" class="delButton" value="削除" >
   </p>`
 
   // タスクを追加、編集ボタン追加

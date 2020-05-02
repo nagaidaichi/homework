@@ -176,7 +176,7 @@ function sortInLocalStorage(storageItem,sourceIndex,destinationIndex,sourceValue
 }
 
 // 検索(TODO絞り込み)
-$('#searchForm').change(function(){
+$('#searchForm').keyup(function(){
   var searchValue = $(this).val();
   $('.task .editTask').each(function(){
     var todoValue = $(this).text();

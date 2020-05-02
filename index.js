@@ -144,6 +144,8 @@ function draggingOver(e) {
 }
 
 function dropped(e) {
+  e.preventDefault();
+  e.stopPropagation();
   var target = e.target;
   if(!$(target).text()) { //input要素の上にドロップしたとき
     src = null;
@@ -152,8 +154,6 @@ function dropped(e) {
     src = null;
     return;
   }
-  e.preventDefault();
-  e.stopPropagation();
   var parent = $(target).parent();
   var sourceIndex = $('.task').index($(src).parent()); // 移動元のTODOのインデックス
   var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス

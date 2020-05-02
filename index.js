@@ -13,22 +13,38 @@ function taskContentRenderer(content) {
       ${content}
     </span>` 
 
+  var showChildTaskButton = '<button>▽</button>';
+
   var taskElement =
   `<p class="task" draggable="true" ${dragAndDropIvent}>
-    <p style="display: inline-block">▽</p>
+    ${showChildTaskButton}
     ${taskContent}
     <input type="button" class="edit" value="編集">
-    <input type="button" class="delButton" value="削除" >
+    <input type="button" class="delButton" value="削除">
   </p>`
 
   // タスクを追加、編集ボタン追加
   $('#listItem').append(taskElement);
 }
 
-function setTodoItemToLocalStorage(content) {
+function setTodoItemToLocalStorage(todoName) {
   var storageItem = localStorage.getItem(STORAGE_KEY);
-  var nextStorageItem = storageItem ? `${storageItem},${content}` : content;
-  localStorage.setItem(STORAGE_KEY, nextStorageItem);
+  // 乱数でid生成
+  var id = Math.random().toString(32).substring(2);
+  var content = JSON.stringify({
+    id: id,
+    name: todoName,
+    parent: null,
+  });
+  var nextStorageItem;
+  if (storageItem) {
+    var parsedStorageItem = JSON.parse(storageItem);
+    parsedStorageItem.push(content);
+    nextStorageItem = parsedStorageItem;
+  } else {
+    nextStorageItem = [content];
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(nextStorageItem));
 }
 
 $(document).on('click','#add',function() {
@@ -47,11 +63,15 @@ $(document).on('click','#add',function() {
 
 function removeTodoItemFromLocalStorage(index){
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+  if (!storageItem) {
+    return;
+  }
 
-  storageItem.splice(index, 1);
-  localStorage.setItem(STORAGE_KEY, storageItem);
+  var parsedItem = JSON.parse(storageItem);
+  parsedItem.splice(index, 1);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
 
-  if (!storageItem.length) {
+  if (!parsedItem.length) {
     localStorage.removeItem(STORAGE_KEY);
   }
 };
@@ -92,7 +112,6 @@ $(document).on('click','.edit',function() {
 
 // 編集したTODOを確定させる
 function submitTodo(e) {
-  // console.log(e.target);
   var target = e.target;
   var editFormValue = $(target).prev().val();
   var taskItem = $(target).parent().parent('.task');
@@ -196,9 +215,10 @@ $('#searchForm').keyup(function(){
 
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {
-    var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+    var storageItem = JSON.parse(localStorage.getItem(STORAGE_KEY));
     storageItem.forEach(function(item){
-      taskContentRenderer(item);
+      var parsedItem = JSON.parse(item);
+      taskContentRenderer(parsedItem.name);
     });
   }
 });

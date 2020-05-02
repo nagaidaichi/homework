@@ -2,9 +2,10 @@ p {
   margin: 0;
 }
 .task {
-  border: 1px solid;
+  border-left: 1px solid;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
 }
-
-/* [draggable] {
-  user-select: none;
-} */
+.task:first-child{
+  border-top: 1px solid;
+}

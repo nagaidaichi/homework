@@ -46,6 +46,7 @@ $(document).on('click','#add',function() {
 
 function removeTodoItemFromLocalStorage(index){
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
+
   storageItem.splice(index, 1);
   localStorage.setItem(STORAGE_KEY, storageItem);
 
@@ -90,22 +91,30 @@ $(document).on('click','.edit',function() {
 
 // 編集したTODOを確定させる
 function submitTodo(e) {
+  // console.log(e.target);
   var target = e.target;
   var editFormValue = $(target).prev().val();
-  if(editFormValue.length === 0) {
-    return ;
-  };
-  var targetListElement = $(target).closest('.task');
+  var taskItem = $(target).parent().parent('.task');
   var editTaskClassElement = $(target).parent().next();
-  var index = $('.task').index(targetListElement);
-  editTaskInLocalStorage(index,editFormValue);
-  editTaskInView(editTaskClassElement,editFormValue,target);
+  var index = $('.task').index(taskItem);
+  if(!editFormValue.length) {
+    editTaskInLocalStorage(index,editFormValue);
+    editTaskInView(editTaskClassElement,editFormValue,target);
+    taskItem.remove();
+  } else {
+    editTaskInLocalStorage(index,editFormValue);
+    editTaskInView(editTaskClassElement,editFormValue,target);
+  }
+
 };
 
 function editTaskInLocalStorage(index,value) {
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
   if (value) {
     storageItem.splice(index, 1, value);
+    localStorage.setItem(STORAGE_KEY, storageItem);
+  } else {
+    storageItem.splice(index, 1);
     localStorage.setItem(STORAGE_KEY, storageItem);
   }
 
@@ -119,7 +128,7 @@ function editTaskInView(editTask,value,target) {
 }
 
 // ドラッグアンドドロップ
-function dragStarted(e) { //e.targetは<p .task>
+function dragStarted(e) { //e.targetは'.task'
   src = e.target.querySelector('span');
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text",src.textContent.trim());
@@ -151,10 +160,8 @@ function dropped(e) {
   var sourceValue = src.textContent.trim();
   var destinationValue = target.textContent.trim();
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  storageItem.splice(sourceIndex, 1, destinationValue);
-  storageItem.splice(destinationIndex, 1, sourceValue);
-  localStorage.setItem(STORAGE_KEY, storageItem);
 
+  sortInLocalStorage(storageItem,sourceIndex,destinationIndex,sourceValue,destinationValue);
   
   // TODO: valueだけを書き換えるようにしたい
   src.textContent = target.textContent.trim();
@@ -162,6 +169,11 @@ function dropped(e) {
   src = null;
 }
 
+function sortInLocalStorage(storageItem,sourceIndex,destinationIndex,sourceValue,destinationValue) {
+  storageItem.splice(sourceIndex, 1, destinationValue);
+  storageItem.splice(destinationIndex, 1, sourceValue);
+  localStorage.setItem(STORAGE_KEY, storageItem);
+}
 
 // 検索(TODO絞り込み)
 $('#searchForm').change(function(){
@@ -170,12 +182,16 @@ $('#searchForm').change(function(){
     var todoValue = $(this).text();
     if (todoValue.indexOf(searchValue) !== -1){
       // 検索にヒットした場合の処理
+      $(this).parent().show();
+
     } else {
       // 検索にヒットしなかった場合の処理
-      $(this).parent().hidden();
+      $(this).parent().hide();
     }
+
   });
 });
+
 
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {

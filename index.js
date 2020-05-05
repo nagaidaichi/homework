@@ -13,14 +13,14 @@ function taskContentRenderer(content) {
       ${content}
     </span>` 
 
-  var showChildTaskButton = '<button>▽</button>';
+  var showChildTaskButton = '<button name="blank">▽</button>';
 
   var taskElement =
   `<p class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
-    <input type="button" class="edit" value="編集">
-    <input type="button" class="delButton" value="削除">
+    <input name="blank" type="button" class="edit" value="編集">
+    <input name="blank" type="button" class="delButton" value="削除">
   </p>`
 
   // タスクを追加、編集ボタン追加
@@ -36,19 +36,12 @@ function setTodoItemToLocalStorage(todoName) {
     name: todoName,
     parent: null,
   });
-  // console.log(content);
 
-  // console.log(JSON.parse(content));
-  // console.log(id);
   var nextStorageItem;
-  // console.log(storageItem);
   if (storageItem) {
     var parsedStorageItem = JSON.parse(storageItem);
-    // console.log(parsedStorageItem);
     parsedStorageItem.push(content);
-    // console.log(parsedStorageItem);
     nextStorageItem = parsedStorageItem;
-    // console.log(nextStorageItem);
   } else {
     nextStorageItem = [content];
   }
@@ -164,8 +157,6 @@ function dragStarted(e) { //e.targetは'.task'
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text",src.textContent.trim());
 
-  // var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  // console.log(storageItem);
 }
 
 function dragEnterd(e) {
@@ -181,8 +172,8 @@ function dropped(e) {
   e.preventDefault();
   e.stopPropagation();
   var target = e.target;
-  console.log(target);
-  if(!$(target).text()) { //input要素の上にドロップしたとき
+  if($(target).attr('name')) { //input要素の上にドロップしたとき
+  // if($('input')) { //input要素の上にドロップしたとき
     src = null;
     return;
   } else if(target.querySelector('span')) { //p要素（右側の空白部分）にドロップしたとき
@@ -190,20 +181,14 @@ function dropped(e) {
     return;
   }
   var parent = $(target).parent();
-  console.log(parent);
   var sourceIndex = $('.task').index($(src).parent()); // 移動元のTODOのインデックス
-  console.log(sourceIndex);
   var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス
-  console.log(destinationIndex);
   var sourceValue = src.textContent.trim();
-  console.log(sourceValue);
   var destinationValue = target.textContent.trim();
-  console.log(destinationValue);
   
   // ローカルストレージ
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
   var parsedItem = JSON.parse(storageItem);
-  console.log(parsedItem);
 
   sortInLocalStorage(parsedItem,sourceIndex,destinationIndex,sourceValue,destinationValue);
   
@@ -241,10 +226,8 @@ $('#searchForm').keyup(function(){
       // 検索にヒットしなかった場合の処理
       $(this).parent().hide();
     }
-
   });
 });
-
 
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {

@@ -37,8 +37,6 @@ function setTodoItemToLocalStorage(todoName) {
     parent: null,
   });
   // console.log(content);
-
-  // console.log(JSON.parse(content));
   // console.log(id);
   var nextStorageItem;
   // console.log(storageItem);
@@ -76,7 +74,9 @@ function removeTodoItemFromLocalStorage(index){
   }
 
   var parsedItem = JSON.parse(storageItem);
+  // console.log(parsedItem);
   parsedItem.splice(index, 1);
+  // console.log(parsedItem);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
 
   if (!parsedItem.length) {
@@ -92,7 +92,7 @@ $(document).on('click','.delButton',function() {
   taskItem.remove();
 });
 
-//全削除する
+//全削除
 $(document).on('click','#reset',function(){
 
   localStorage.removeItem(STORAGE_KEY);
@@ -133,23 +133,20 @@ function submitTodo(e) {
     editTaskInLocalStorage(index,editFormValue);
     editTaskInView(editTaskClassElement,editFormValue,target);
   }
+
 };
 
 function editTaskInLocalStorage(index,value) {
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  var parsedItem = JSON.parse(storageItem);
-
   if (value) {
-    var parsedParsedItem = JSON.parse(parsedItem[index]);
-    parsedParsedItem.name = value;
-    var stringifiedItem = JSON.stringify(parsedParsedItem);
-    parsedItem.splice(index, 1, stringifiedItem);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
-
+    storageItem.splice(index, 1, value);
+    localStorage.setItem(STORAGE_KEY, storageItem);
   } else {
-    parsedItem.splice(index, 1,);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
+    storageItem.splice(index, 1);
+    localStorage.setItem(STORAGE_KEY, storageItem);
   }
+
+  return;
 }
 
 function editTaskInView(editTask,value,target) {
@@ -163,9 +160,6 @@ function dragStarted(e) { //e.targetは'.task'
   src = e.target.querySelector('span');
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text",src.textContent.trim());
-
-  // var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  // console.log(storageItem);
 }
 
 function dragEnterd(e) {
@@ -181,7 +175,6 @@ function dropped(e) {
   e.preventDefault();
   e.stopPropagation();
   var target = e.target;
-  console.log(target);
   if(!$(target).text()) { //input要素の上にドロップしたとき
     src = null;
     return;
@@ -190,42 +183,24 @@ function dropped(e) {
     return;
   }
   var parent = $(target).parent();
-  console.log(parent);
   var sourceIndex = $('.task').index($(src).parent()); // 移動元のTODOのインデックス
-  console.log(sourceIndex);
   var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス
-  console.log(destinationIndex);
   var sourceValue = src.textContent.trim();
-  console.log(sourceValue);
   var destinationValue = target.textContent.trim();
-  console.log(destinationValue);
-  
-  // ローカルストレージ
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
-  var parsedItem = JSON.parse(storageItem);
-  console.log(parsedItem);
 
-  sortInLocalStorage(parsedItem,sourceIndex,destinationIndex,sourceValue,destinationValue);
+  sortInLocalStorage(storageItem,sourceIndex,destinationIndex,sourceValue,destinationValue);
   
-  // TODO: valueだけを書き換える
+  // TODO: valueだけを書き換えるようにしたい
   src.textContent = target.textContent.trim();
   target.textContent = e.dataTransfer.getData("text");
   src = null;
 }
 
-function sortInLocalStorage(parsedItem,sourceIndex,destinationIndex,sourceValue,destinationValue) {
-
-  var parsedSourceItem = JSON.parse(parsedItem[sourceIndex]);
-  parsedSourceItem.name = destinationValue;
-  var stringifiedSourceItem = JSON.stringify(parsedSourceItem);
-  parsedItem.splice(sourceIndex, 1, stringifiedSourceItem);
-
-  var parsedDestinationItem = JSON.parse(parsedItem[destinationIndex]);
-  parsedDestinationItem.name = sourceValue;
-  var stringifiedDistinationItem = JSON.stringify(parsedDestinationItem);
-  parsedItem.splice(destinationIndex, 1, stringifiedDistinationItem);
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
+function sortInLocalStorage(storageItem,sourceIndex,destinationIndex,sourceValue,destinationValue) {
+  storageItem.splice(sourceIndex, 1, destinationValue);
+  storageItem.splice(destinationIndex, 1, sourceValue);
+  localStorage.setItem(STORAGE_KEY, storageItem);
 }
 
 // 検索(TODO絞り込み)

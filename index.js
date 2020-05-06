@@ -13,7 +13,7 @@ function taskContentRenderer(content) {
       ${content}
     </span>` 
 
-  var showChildTaskButton = '<button name="blank">▽</button>';
+  var showChildTaskButton = '<button name="blank" onclick="inputFormForAddingChildTasksAppears(event)">▽</button>';
 
   var taskElement =
   `<p class="task" draggable="true" ${dragAndDropIvent}>
@@ -21,6 +21,9 @@ function taskContentRenderer(content) {
     ${taskContent}
     <input name="blank" type="button" class="edit" value="編集">
     <input name="blank" type="button" class="delButton" value="削除">
+    <ul>
+      <li></li>
+    </ul>
   </p>`
 
   // タスクを追加、編集ボタン追加
@@ -50,7 +53,7 @@ function setTodoItemToLocalStorage(todoName) {
 
 $(document).on('click','#add',function() {
   var content = $('#inputTodo').val();
-  if(content.length === 0) {
+  if(!content.length) {
     return;
   };
 
@@ -118,6 +121,7 @@ function submitTodo(e) {
   var taskItem = $(target).parent().parent('.task');
   var editTaskClassElement = $(target).parent().next();
   var index = $('.task').index(taskItem);
+
   if(!editFormValue.length) {
     editTaskInLocalStorage(index,editFormValue);
     editTaskInView(editTaskClassElement,editFormValue,target);
@@ -133,9 +137,10 @@ function editTaskInLocalStorage(index,value) {
   var parsedItem = JSON.parse(storageItem);
 
   if (value) {
-    var parsedParsedItem = JSON.parse(parsedItem[index]);
-    parsedParsedItem.name = value;
-    var stringifiedItem = JSON.stringify(parsedParsedItem);
+  furtherParsedItem = JSON.parse(parsedItem[index]);
+    var furtherParsedItem = JSON.parse(parsedItem[index]);
+    furtherParsedItem.name = value;
+    var stringifiedItem = JSON.stringify(furtherParsedItem);
     parsedItem.splice(index, 1, stringifiedItem);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
 
@@ -172,24 +177,22 @@ function dropped(e) {
   e.preventDefault();
   e.stopPropagation();
   var target = e.target;
-  if($(target).attr('name')) { //input要素の上にドロップしたとき
-  // if($('input')) { //input要素の上にドロップしたとき
-    src = null;
-    return;
-  } else if(target.querySelector('span')) { //p要素（右側の空白部分）にドロップしたとき
-    src = null;
-    return;
-  }
+    if($(target).attr('name')) { //input要素の上にドロップしたとき
+      src = null;
+      return;
+    } else if(target.querySelector('span')) { //p要素（右側の空白部分）にドロップしたとき
+      src = null;
+      return;
+    }
   var parent = $(target).parent();
   var sourceIndex = $('.task').index($(src).parent()); // 移動元のTODOのインデックス
   var destinationIndex = $('.task').index(parent); // 移動先のTODOのインデックス
   var sourceValue = src.textContent.trim();
   var destinationValue = target.textContent.trim();
   
-  // ローカルストレージ
+  // ドラッグアンドドロップのローカルストレージ
   var storageItem = localStorage.getItem(STORAGE_KEY).split(',');
   var parsedItem = JSON.parse(storageItem);
-
   sortInLocalStorage(parsedItem,sourceIndex,destinationIndex,sourceValue,destinationValue);
   
   // TODO: valueだけを書き換える
@@ -228,6 +231,22 @@ $('#searchForm').keyup(function(){
     }
   });
 });
+
+// 子タスク入力フォーム出現
+function inputFormForAddingChildTaskAppears(event) {
+  console.log(event.target);
+  var e = event.target;
+  console.log(e);
+  var taskItem = $(e).parent('.task');
+  console.log(taskItem);
+  var inputForm = `
+  <p class='addChildTaskBox'>
+  <input id='addChildTask' type="text" placeholder="子タスク">
+  <button>追加</button>
+  </p>`
+  $(taskItem).append(inputForm);
+  $('#addChildTask').focus();
+};
 
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {

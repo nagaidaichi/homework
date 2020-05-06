@@ -9,6 +9,3 @@ p {
 .task:first-child{
   border-top: 1px solid;
 }
-.addChildTaskBox {
-  display: inline-block;
-}

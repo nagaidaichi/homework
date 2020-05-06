@@ -1,6 +1,6 @@
 var STORAGE_KEY = 'TODO_APP';
 
-function taskContentRenderer(content) {
+function taskContentRenderer(content,event,childTaskList) {
   var dragAndDropIvent = 
    `ondragstart="dragStarted(event)"
     ondragenter="dragEnterd(event)"
@@ -13,21 +13,23 @@ function taskContentRenderer(content) {
       ${content}
     </span>` 
 
-  var showChildTaskButton = '<button name="blank" onclick="inputFormForAddingChildTasksAppears(event)">▽</button>';
+  var showChildTaskButton = '<button name="blank" onclick="inputFormForAddingChildTask(event)">▽</button>';
 
   var taskElement =
-  `<p class="task" draggable="true" ${dragAndDropIvent}>
+  `<div class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
     <input name="blank" type="button" class="edit" value="編集">
     <input name="blank" type="button" class="delButton" value="削除">
-    <ul>
-      <li></li>
-    </ul>
-  </p>`
+    <div class="childTaskList"></div>
+  </div>`
 
   // タスクを追加、編集ボタン追加
-  $('#listItem').append(taskElement);
+  if(!$(event).attr('onclick')) {
+    $('#taskList').append(taskElement);
+  } else if($(event).attr('onclick')) {
+    $(childTaskList).append(taskElement);
+  }
 }
 
 function setTodoItemToLocalStorage(todoName) {
@@ -52,12 +54,14 @@ function setTodoItemToLocalStorage(todoName) {
 }
 
 $(document).on('click','#add',function() {
+  var event = this;
+  console.log(event);
   var content = $('#inputTodo').val();
   if(!content.length) {
     return;
   };
 
-  taskContentRenderer(content);
+  taskContentRenderer(content,event);
 
   setTodoItemToLocalStorage(content)
 
@@ -70,11 +74,9 @@ function removeTodoItemFromLocalStorage(index){
   if (!storageItem) {
     return;
   }
-
   var parsedItem = JSON.parse(storageItem);
   parsedItem.splice(index, 1);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
-
   if (!parsedItem.length) {
     localStorage.removeItem(STORAGE_KEY);
   }
@@ -82,7 +84,7 @@ function removeTodoItemFromLocalStorage(index){
 
 // タスクを削除する
 $(document).on('click','.delButton',function() {
-  var taskItem = $(this).parent('p');
+  var taskItem = $(this).parent('div');
   var index = $('.task').index(taskItem);
   removeTodoItemFromLocalStorage(index);
   taskItem.remove();
@@ -121,7 +123,6 @@ function submitTodo(e) {
   var taskItem = $(target).parent().parent('.task');
   var editTaskClassElement = $(target).parent().next();
   var index = $('.task').index(taskItem);
-
   if(!editFormValue.length) {
     editTaskInLocalStorage(index,editFormValue);
     editTaskInView(editTaskClassElement,editFormValue,target);
@@ -143,7 +144,6 @@ function editTaskInLocalStorage(index,value) {
     var stringifiedItem = JSON.stringify(furtherParsedItem);
     parsedItem.splice(index, 1, stringifiedItem);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
-
   } else {
     parsedItem.splice(index, 1,);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedItem));
@@ -161,7 +161,6 @@ function dragStarted(e) { //e.targetは'.task'
   src = e.target.querySelector('span');
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text",src.textContent.trim());
-
 }
 
 function dragEnterd(e) {
@@ -233,27 +232,39 @@ $('#searchForm').keyup(function(){
 });
 
 // 子タスク入力フォーム出現
-function inputFormForAddingChildTaskAppears(event) {
+function inputFormForAddingChildTask(event) {
   console.log(event.target);
   var e = event.target;
   console.log(e);
   var taskItem = $(e).parent('.task');
   console.log(taskItem);
   var inputForm = `
-  <p class='addChildTaskBox'>
-  <input id='addChildTask' type="text" placeholder="子タスク">
-  <button>追加</button>
-  </p>`
+  <div class='addChildTaskContent'>
+    <input id='addChildTask' type="text" placeholder="子タスク">
+    <button onclick="buttonForAddingTask(event)">追加</button>
+  </div>`
   $(taskItem).append(inputForm);
   $('#addChildTask').focus();
 };
+
+function buttonForAddingTask(event) {
+  var e = event.target;
+  var content = $(e).parent()
+  var value = $('#addChildTask').val();
+  if(!value.length) {
+    $(content).remove();
+  };
+  var taskItem = $(content).parent();
+  var childTaskList = $(taskItem).children('.childTaskList');
+  taskContentRenderer(value,e,childTaskList)
+  $(content).remove();
+}
 
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {
     var storageItem = JSON.parse(localStorage.getItem(STORAGE_KEY));
     storageItem.forEach(function(item){
       var parsedItem = JSON.parse(item);
-
       taskContentRenderer(parsedItem.name);
     });
   }

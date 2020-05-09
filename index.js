@@ -1,5 +1,3 @@
-var STORAGE_KEY = 'TODO_APP';
-
 function taskContentRenderer(content,event,childNameList) {
   var dragAndDropIvent = 
    `ondragstart="dragStarted(event)"

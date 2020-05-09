@@ -10,21 +10,16 @@ li {
   position: relative;
   border-top: 1px solid gray;
   padding-left: 1em;
-  width: 320px;
 }
-.childTaskBox {
-  padding-left: 0;
-}
+
 .taskListStyle {
   border-bottom: 1px solid gray;
   padding-left: 0;
-  width: 340px;
 }
 .text {
   position: relative; 
   left: 5px; 
   display: inline-block;
-  width: 200px;
   word-wrap: break-word;
   line-height: 30px;
 }

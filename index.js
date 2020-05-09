@@ -1,6 +1,6 @@
 var STORAGE_KEY = 'TODO_APP';
 
-function taskContentRenderer(content,event,childTaskBox) {
+function taskContentRenderer(content,event,childNameList) {
   var dragAndDropIvent = 
    `ondragstart="dragStarted(event)"
     ondragenter="dragEnterd(event)"
@@ -15,17 +15,31 @@ function taskContentRenderer(content,event,childTaskBox) {
 
   var showChildTaskButton = '<button name="blank" class="showChildTaskButton_style" onclick="inputFormForAddingChildTask(event)">▽</button>';
 
+  var childTaskBoxElement = '';
+  if (childNameList.length > 0) {
+    var childTask = "";
+    childNameList.forEach(function(child){
+      childTask += `<li>
+        ${showChildTaskButton}
+        <span class="editTask text">${child}</span>
+        <input name="blank" type="button" class="editButton edit" value="編集">
+        <input name="blank" type="button" class="delButton delete" value="削除">
+      </li>`;
+    });
+    childTaskBoxElement = `<ul class="childTaskBox">${childTask}</ul>`;
+  }
+
   var taskElement =
   `<li class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
     <input name="blank" type="button" class="editButton edit" value="編集">
     <input name="blank" type="button" class="delButton delete" value="削除">
-    <ul class="childTaskBox"></ul>
+    ${childTaskBoxElement}
   </li>`;
 
   // タスクを追加、編集ボタン追加
-  addTask(event,taskElement,childTaskBox);
+  addTask(event,taskElement,childTaskBoxElement);
 
 }
 
@@ -301,17 +315,20 @@ function addChildTaskInLocalStorage(index,todoName) {
 $(function(){
   if(localStorage.getItem(STORAGE_KEY)) {
     var storageItem = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    // console.log(storageItem.length);
-    storageItem.forEach(function(item){
+    var parsedItemList = storageItem.map(function(item){
       var parsedItem = JSON.parse(item);
-      // console.log(parsedItem);
-      taskContentRenderer(parsedItem.name);
-      if(parsedItem.parent){
-        var childName = JSON.parse(parsedItem.parent);
-        // console.log(childName);
-        taskContentRenderer(childName.name);
+      if (parsedItem.parent.length > 0) {
+        var parsedParentTaskList = parsedItem.parent.map(function(parentItem) {
+          var item = JSON.parse(parentItem);
+          return item.name;
+        });
+        parsedItem.parent = parsedParentTaskList;
       }
-
+      return parsedItem;
+    });
+  
+    parsedItemList.forEach(function(item) {
+      taskContentRenderer(item.name, null, item.parent);
     });
 
   }

@@ -1,11 +1,51 @@
 p {
   margin: 0;
 }
-.task {
-  border-left: 1px solid;
-  border-bottom: 1px solid;
-  border-right: 1px solid;
+li {
+  list-style: none;
+  font-size: 1.1em;
 }
-.task:first-child{
-  border-top: 1px solid;
+
+.task {
+  position: relative;
+  border-top: 1px solid gray;
+  padding-left: 1em;
+  width: 320px;
+}
+.childTaskBox {
+  padding-left: 0;
+}
+.taskListStyle {
+  border-bottom: 1px solid gray;
+  padding-left: 0;
+  width: 340px;
+}
+.text {
+  position: relative; 
+  left: 5px; 
+  display: inline-block;
+  width: 200px;
+  word-wrap: break-word;
+  line-height: 30px;
+}
+.showChildTaskButton_style{
+  position: relative; 
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.addChildTaskContent {
+  padding-left: 1em;
+}
+.edit {
+  position: relative;
+
+}
+.delete {
+  position: relative;
+
+}
+.editFormDisplay {
+  display: inline;
+  position: relative;
 }

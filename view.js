@@ -20,8 +20,8 @@ function taskContentRenderer(content, childNameList) {
             childTask += `<li class="task">
           ${showChildTaskButton}
           <span class="editTask text">${child}</span>
-          <input name="blank" type="button" class="editButton edit" value="編集">
-          <input name="blank" type="button" class="delButton delete" value="削除" onclick="deleteTask(event)">
+          <button class="editButton edit"></button>
+          <button class="delButton delete" onclick="deleteTask(event)"></button>
         </li>`;
         });
         childTaskBoxElement = `<ul class="childTaskBox">${childTask}</ul>`;
@@ -38,8 +38,8 @@ function element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBo
     `<li class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
-    <input name="blank" type="button" class="editButton edit" value="編集">
-    <input name="blank" type="button" class="delButton delete" value="削除" onclick="deleteTask(event)">
+    <button class="editButton edit">></button>
+    <button class="delButton delete" onclick="deleteTask(event)"></button>
     ${childTaskBoxElement}
     </li>`;
     return taskElement;

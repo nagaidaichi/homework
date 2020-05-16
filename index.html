@@ -10,12 +10,12 @@
     <div>
       <input type="text" id='searchForm' placeholder="絞り込み">
     </div>
-    <div>
+    <div class="todo__container">
       <input type="text" id="inputTodo" placeholder='TODO' >
-      <button type="button" id="add" onclick="addTask(event)">追加</button>
+      <button type="button" id="add" onclick="addTask(event)"></button>
+      <button type="button" id="reset"></button>
     </div>
     <ul id="taskList" class="taskListStyle"></ul>
-    <button type="button" id="reset">全削除！</button>
     
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="storagekey.js"></script>

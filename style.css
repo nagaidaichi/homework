@@ -6,19 +6,81 @@ li {
 }
 
 .task {
-  border-top: 1px solid gray;
+  border-top: 1px solid rgba(60,64,67,0.302);
   padding-left: 1em;
+  position: relative;
+}
+
+.task:hover {
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
+  outline: 0;
 }
 
 .taskListStyle {
-  border-bottom: 1px solid gray;
-  padding-left: 0;
+  border-bottom: 1px solid rgba(60,64,67,0.302);
+  margin: 0;
+  padding: 0;
 }
 .text {
-  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 280px;
 }
 .addChildTaskContent {
   padding-left: 1em;
 }
 
+button {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  height: 32px;
+  width: 32px;
+}
 
+.todo__container {
+  align-items: center;
+  display: flex;
+}
+
+#inputTodo {
+  border:none;
+  font-size: 16px;
+  height: 40px;
+  padding: 4px;
+  width: 320px;
+}
+
+#inputTodo:focus {
+  border-bottom: 2px solid #6200ee;
+  outline: none;
+}
+
+#add {
+  background-image: url('assets/add-black-18dp.svg');
+}
+
+#add:hover {
+  transform: scale(1.2);
+}
+
+#reset {
+  background-image: url('assets/delete_forever-black-18dp.svg');
+  margin-left: 16px;
+}
+
+.editButton {
+  background-image: url('assets/edit-black-18dp.svg');
+  left: 280px;
+  position: absolute;
+}
+
+.delButton {
+  background-image: url('assets/done-black-18dp.svg');
+  position: absolute;
+  left: 324px;
+}

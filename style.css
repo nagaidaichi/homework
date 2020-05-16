@@ -3,11 +3,9 @@ p {
 }
 li {
   list-style: none;
-  font-size: 1.1em;
 }
 
 .task {
-  position: relative;
   border-top: 1px solid gray;
   padding-left: 1em;
 }
@@ -17,30 +15,10 @@ li {
   padding-left: 0;
 }
 .text {
-  position: relative; 
-  left: 5px; 
-  display: inline-block;
-  word-wrap: break-word;
   line-height: 30px;
-}
-.showChildTaskButton_style{
-  position: relative; 
-  top: 0;
-  bottom: 0;
-  margin: auto;
 }
 .addChildTaskContent {
   padding-left: 1em;
 }
-.edit {
-  position: relative;
 
-}
-.delete {
-  position: relative;
 
-}
-.editFormDisplay {
-  display: inline;
-  position: relative;
-}

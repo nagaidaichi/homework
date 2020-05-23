@@ -1,34 +1,83 @@
 p {
   margin: 0;
 }
+
 li {
   list-style: none;
 }
 
+#searchForm {
+  border: none;
+  font-size: 16px;
+  height: 40px;
+  padding: 4px;
+  width: 320px;
+}
+
+#searchForm:focus {
+  outline: none;
+  border-bottom: 2px solid #6200ee;
+}
+
 .task {
-  border-top: 1px solid rgba(60,64,67,0.302);
+  border-top: 1px solid rgba(60, 64, 67, 0.302);
   padding-left: 1em;
   position: relative;
 }
 
 .task:hover {
-  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
   outline: 0;
 }
 
 .taskListStyle {
-  border-bottom: 1px solid rgba(60,64,67,0.302);
+  border-bottom: 1px solid rgba(60, 64, 67, 0.302);
   margin: 0;
   padding: 0;
 }
+
 .text {
+  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 280px;
+  width: 230px;
+  font-size: 16px;
+  vertical-align: middle;
+  padding: 6px 0;
+  font-family: monospace,sans-serif;
 }
+
 .addChildTaskContent {
   padding-left: 1em;
+  border-top: 1px solid rgba(60, 64, 67, 0.302);
+  padding-left: 1em;
+  margin-left: 40px;
+  position: relative;
+}
+
+.addChildTaskContent:hover {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
+  
+
+}
+
+.editFormDisplay {
+  display: inline-block;
+}
+
+input[id^='inputValue_'] {
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  font-size: 16px;
+  display: inline-block;
+  height: 35px;
+}
+
+input[id^='inputValue_']:focus {
+  border-bottom: 2px solid #6200ee;
+  outline: none;
 }
 
 button {
@@ -38,8 +87,9 @@ button {
   border: none;
   cursor: pointer;
   padding: 0;
-  height: 32px;
-  width: 32px;
+  height: 28px;
+  width: 28px;
+  outline: none;
 }
 
 .todo__container {
@@ -48,7 +98,7 @@ button {
 }
 
 #inputTodo {
-  border:none;
+  border: none;
   font-size: 16px;
   height: 40px;
   padding: 4px;
@@ -62,6 +112,7 @@ button {
 
 #add {
   background-image: url('assets/add-black-18dp.svg');
+
 }
 
 #add:hover {
@@ -73,14 +124,64 @@ button {
   margin-left: 16px;
 }
 
+#reset:hover {
+  transform: scale(1.2);
+}
+
 .editButton {
   background-image: url('assets/edit-black-18dp.svg');
   left: 280px;
+  margin-top: 4px;
   position: absolute;
+}
+
+.editButton:hover {
+  transform: scale(1.2);
+}
+
+.confirmButton {
+  background-size: contain;
+  background-image: url('assets/thumb_up_alt-black-18dp.svg');
+}
+.confirmButton:hover {
+  transform: scale(1.2);
 }
 
 .delButton {
   background-image: url('assets/done-black-18dp.svg');
+  background-size: contain;
+  margin-top: 4px;
   position: absolute;
   left: 324px;
+}
+
+.delButton:hover {
+  transform: scale(1.2);
+}
+
+.addChild {
+  background-image: url('assets/arrow_drop_down-black-18dp.svg');
+} 
+
+.addChild:hover {
+  transform: scale(1.2);
+}
+
+#addChildTask {
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  font-size: 16px;
+  display: inline-block;
+  height: 32px;
+  margin-left: 33px;
+}
+
+.addChildButton {
+  vertical-align: middle;
+}
+
+#addChildTask:focus {
+  border-bottom: 2px solid #6200ee;
+  outline: none;
 }

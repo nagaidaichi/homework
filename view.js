@@ -11,7 +11,7 @@ function taskContentRenderer(content, childNameList) {
         ${content}
       </span>`;
 
-    var showChildTaskButton = '<button name="blank" onclick="inputFormForAddingChildTask(event)">▽</button>';
+    var showChildTaskButton = '<button class="addChild" name="blank" onclick="inputFormForAddingChildTask(event)">・</button>';
 
     var childTaskBoxElement = '';
     if (childNameList && childNameList.length > 0) {
@@ -26,7 +26,7 @@ function taskContentRenderer(content, childNameList) {
         });
         childTaskBoxElement = `<ul class="childTaskBox">${childTask}</ul>`;
         var taskElement = element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBoxElement);
-    } else if(!childNameList && !childTaskBoxElement) {
+    } else if (!childNameList && !childTaskBoxElement) {
         childTaskBoxElement = `<ul class="childTaskBox"></ul>`
         var taskElement = element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBoxElement);
     }
@@ -35,7 +35,7 @@ function taskContentRenderer(content, childNameList) {
 
 function element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBoxElement) {
     var taskElement =
-    `<li class="task" draggable="true" ${dragAndDropIvent}>
+        `<li class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
     <button class="editButton edit">></button>
@@ -52,7 +52,7 @@ function addTask(e) {
         return;
     };
 
-    var task = taskContentRenderer(content, null); 
+    var task = taskContentRenderer(content, null);
     $('#taskList').append(task);
 
     setTodoItemToLocalStorage(content);
@@ -63,14 +63,16 @@ function addTask(e) {
 
 // タスクを削除する
 function deleteTask(e) {
-        var taskItem = $(e.target).parent('.task');
-        var parent = $(taskItem).parent().parent('.task');
-        var parentIndex = $(parent).index();
+    var taskItem = $(e.target).parent('.task');
+    var parent = $(taskItem).parent().parent('.task');
+    var parentIndex = $(parent).index();
 
-        var index = $(taskItem).index();
+    var index = $(taskItem).index();
 
-        removeTodoItemFromLocalStorage(index, parentIndex);
-        taskItem.remove();
+    removeTodoItemFromLocalStorage(index, parentIndex);
+    $(taskItem).fadeOut('fast', function() {
+        $(this).remove();
+      });
 }
 
 //全削除する
@@ -78,7 +80,9 @@ $(document).on('click', '#reset', function () {
 
     localStorage.removeItem(STORAGE_KEY);
 
-    $('.task').remove();
+    $('.task').fadeOut('fast', function() {
+        $(this).remove();
+      });;
     $('#inputTodo').focus();
 });
 
@@ -91,7 +95,7 @@ $(document).on('click', '.editButton', function () {
     var editForm = `
       <div id="editForm_${index}" class="editFormDisplay">
         <input type="text" id="inputValue_${index}">
-        <input type="button" id="confirm" value="確定" onclick="submitTodo(event)">
+        <button class="confirmButton" id="confirm" onclick="submitTodo(event)">・</button>
       </div>`;
     $(this).prev().prev().after(editForm);
     var editFormInput = $(`#inputValue_${index}`);
@@ -123,7 +127,7 @@ function editTaskInView(editTask, value, target) {
 }
 
 // ドラッグアンドドロップ
-function dragStarted(e) { 
+function dragStarted(e) {
     src = e.target.querySelector('span');
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text", src.textContent.trim());
@@ -142,10 +146,10 @@ function dropped(e) {
     e.preventDefault();
     e.stopPropagation();
     var target = e.target;
-    if ($(target).attr('name')) { 
+    if ($(target).attr('name')) {
         src = null;
         return;
-    } else if (target.querySelector('span')) { 
+    } else if (target.querySelector('span')) {
         src = null;
         return;
     }
@@ -190,7 +194,7 @@ function inputFormForAddingChildTask(event) {
     var inputForm = `
     <div class='addChildTaskContent'>
       <input id='addChildTask' type="text" placeholder="子タスク">
-      <button onclick="buttonForAddingChildTask(event)">追加</button>
+      <button id="add" class="addChildButton" onclick="buttonForAddingChildTask(event)"></button>
     </div>`
     $(itemBox).append(inputForm);
     $('#addChildTask').focus();

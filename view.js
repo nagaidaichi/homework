@@ -45,21 +45,21 @@ function element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBo
     return taskElement;
 }
 
-function addTask(e) {
-    var event = e.target;
-    var content = $('#inputTodo').val();
-    if (!content.length) {
-        return;
-    };
-
-    var task = taskContentRenderer(content, null);
-    $('#taskList').append(task);
-
-    setTodoItemToLocalStorage(content);
-
-    $('#inputTodo').val("");
-    $('#inputTodo').focus();
-}
+// function addTask(e) {
+//     var event = e.target;
+//     var content = $('#inputTodo').val();
+//     if (!content.length) {
+//         return;
+//     };
+//
+//     var task = taskContentRenderer(content, null);
+//     $('#taskList').append(task);
+//
+//     setTodoItemToLocalStorage(content);
+//
+//     $('#inputTodo').val("");
+//     $('#inputTodo').focus();
+// }
 
 // タスクを削除する
 function deleteTask(e) {

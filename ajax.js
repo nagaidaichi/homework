@@ -39,24 +39,25 @@ function addTask(e) {
     $('#inputTodo').focus();
 }
 
-function getStatus(id) {
-  var status = [];
-  $.ajax({
-    url: 'http://localhost:8000/api/status',
-    type: 'GET',
-  })
-  .done(function(data){
-    status = data.filter(function(item){
-      if(item.id == id){
-        return item.status;
-      }
-    });
-  })
-  .fail(function(err){
-    console.log(err);
-  });
-  return status;
-}
+// function getStatus(id) {
+//   var status = [];
+//   $.ajax({
+//     url: 'http://localhost:8000/api/status',
+//     type: 'GET',
+//   })
+//   .done(function(data){
+//     status = data.filter(function(item){
+//       if(item.id == id){
+//         return item.status;
+//       }
+//     });
+//   })
+//   .fail(function(err){
+//     console.log(err);
+//   });
+//   return status;
+// 
+// }
 
 $(function(){
   $.ajax({
@@ -66,9 +67,12 @@ $(function(){
   .done(function(data){
     console.log(data);
 
+    // $st = data.status_id.status;
+    // console.log(item.status);
+
     data.map(function(item) {
       var taskContent = item.content;
-      var status = getStatus(item.status_id);
+      // var status = getStatus(item.status_id);
       var taskElement = 
         `<li class="task">
           ${taskContent}

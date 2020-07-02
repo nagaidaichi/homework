@@ -51,8 +51,6 @@ $(function(){
     data.map(function(item) {
       var taskContent = item.content;
       var status = item.status.status;
-      console.log(item);
-      console.log(status);
       var taskElement = 
         `<li class="task">
           ${taskContent}

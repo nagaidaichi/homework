@@ -14,9 +14,11 @@ function postTask(content) {
 
     data.map(function(item) {
       var taskContent = item.content;
+      var status = getStatus(item);
       var taskElement = 
         `<li class="task">
           ${taskContent}
+          ${status}
         </li>`;
       $('#taskList').append(taskElement);
     });
@@ -39,6 +41,10 @@ function addTask(e) {
     $('#inputTodo').focus();
 }
 
+function getStatus(data) {
+  var status = data.status.status;
+  return status;
+}
 
 $(function(){
   $.ajax({
@@ -50,7 +56,7 @@ $(function(){
 
     data.map(function(item) {
       var taskContent = item.content;
-      var status = item.status.status;
+      var status = getStatus(item);
       var taskElement = 
         `<li class="task">
           ${taskContent}

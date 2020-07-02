@@ -67,15 +67,17 @@ $(function(){
   .done(function(data){
     console.log(data);
 
-    // $st = data.status_id.status;
-    // console.log(item.status);
-
     data.map(function(item) {
       var taskContent = item.content;
+      // var st = item.status_id;
+      var status = item.status.status;
+      console.log(item);
+      console.log(status);//完了・未着手
       // var status = getStatus(item.status_id);
       var taskElement = 
         `<li class="task">
           ${taskContent}
+          ${status}
         </li>`;
       $('#taskList').append(taskElement);
     });

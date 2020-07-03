@@ -1,11 +1,11 @@
-function postTask(content) {
+function postTask(content, status) {
   $.ajax({
     url: 'http://localhost:8000/api/task',
     type: 'POST',
     contentType: 'application/x-www-form-urlencoded',
     data: {
       content: content,
-      status_id: 1,
+      status_id: status,
     },
   })
   .done(function(data){
@@ -16,7 +16,7 @@ function postTask(content) {
       var taskContent = item.content;
       var status = getStatus(item);
       var taskElement = 
-        `<li class="task">
+       `<li class="task">
           ${taskContent}
           ${status}
         </li>`;
@@ -28,18 +28,25 @@ function postTask(content) {
   });
 }
 
-function addTask(e) {
-    var event = e.target;
-    var content = $('#inputTodo').val();
-    if (!content.length) {
-        return;
-    };
-
-    postTask(content);
-
-    $('#inputTodo').val("");
-    $('#inputTodo').focus();
+function selectData() {
+  var value = $('#select').val();
+  return value;
 }
+
+function addTask(e) {
+  var status = selectData();
+  var content = $('#inputTodo').val();
+  if (!content || !status) {
+      return;
+  };
+
+  postTask(content, status);
+
+  $('#inputTodo').val("");
+  $('#select').val("");
+  $('#inputTodo').focus();
+}
+
 
 function getStatus(data) {
   var status = data.status.status;
@@ -58,8 +65,8 @@ $(function(){
       var taskContent = item.content;
       var status = getStatus(item);
       var taskElement = 
-        `<li class="task">
-          ${taskContent}
+       `<li class="task">
+           ${taskContent}
           ${status}
         </li>`;
       $('#taskList').append(taskElement);

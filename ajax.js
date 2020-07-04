@@ -15,8 +15,9 @@ function postTask(content, status) {
     data.map(function(item) {
       var taskContent = item.content;
       var status = getStatus(item);
+      var id = item.id;
       var taskElement = 
-       `<li class="task">
+       `<li class="task" id=${id}>
           ${taskContent}
           ${status}
         </li>`;
@@ -53,7 +54,20 @@ function getStatus(data) {
   return status;
 }
 
-$(function(){
+function deleteTask(e) {
+  var listItem = $(e.target).parent();
+  var id = $(listItem).attr('id');
+
+  $.ajax({
+    url: `http://localhost:8000/api/task/${id}`,
+    type: 'DELETE',
+  })
+  .fail(function(err){
+    console.log(err);
+  });
+}
+
+function initialize() {
   $.ajax({
     url: 'http://localhost:8000/api/task',
     type: 'GET',
@@ -64,10 +78,12 @@ $(function(){
     data.map(function(item) {
       var taskContent = item.content;
       var status = getStatus(item);
+      var id = item.id;
       var taskElement = 
-       `<li class="task">
+       `<li class="task" id=${id}>
            ${taskContent}
           ${status}
+          <button class="delete" onclick="deleteTask(event)">delete</button>
         </li>`;
       $('#taskList').append(taskElement);
     });
@@ -75,4 +91,8 @@ $(function(){
   .fail(function(err){
     console.log(err);
   });
+}
+
+$(function(){
+  initialize();
 });

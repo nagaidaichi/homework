@@ -38,7 +38,7 @@ function element(dragAndDropIvent, taskContent, showChildTaskButton, childTaskBo
         `<li class="task" draggable="true" ${dragAndDropIvent}>
     ${showChildTaskButton}
     ${taskContent}
-    <button class="editButton edit">></button>
+    <button class="editButton edit"></button>
     <button class="delButton delete" onclick="deleteTask(event)"></button>
     ${childTaskBoxElement}
     </li>`;

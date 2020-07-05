@@ -23,6 +23,13 @@ li {
   border-top: 1px solid rgba(60, 64, 67, 0.302);
   padding-left: 1em;
   position: relative;
+  align-items: center;
+  display: flex;
+}
+
+.taskContent {
+  padding:0 4px;
+  width: 312px;
 }
 
 .task:hover {
@@ -41,7 +48,6 @@ li {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 230px;
   font-size: 16px;
   vertical-align: middle;
   padding: 6px 0;
@@ -58,8 +64,6 @@ li {
 
 .addChildTaskContent:hover {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
-  
-
 }
 
 .editFormDisplay {
@@ -73,6 +77,18 @@ input[id^='inputValue_'] {
   font-size: 16px;
   display: inline-block;
   height: 35px;
+}
+
+.updateTodo {
+  border: none;
+  font-size: 16px;
+  height: 35px;
+  width: 311px;
+}
+
+.updateTodo:focus {
+  border-bottom: 2px solid #6200ee;
+  outline: none;
 }
 
 input[id^='inputValue_']:focus {
@@ -91,6 +107,11 @@ button {
   width: 28px;
   outline: none;
 }
+
+.chooseSelect {
+  margin-left: 16px;
+}
+
 
 .todo__container {
   align-items: center;
@@ -112,7 +133,7 @@ button {
 
 #add {
   background-image: url('assets/add-black-18dp.svg');
-
+  margin-left: 16px;
 }
 
 #add:hover {
@@ -123,8 +144,36 @@ button {
   background-image: url('assets/delete_forever-black-18dp.svg');
   margin-left: 16px;
 }
+.reset {
+  background-image: url('assets/delete_forever-black-18dp.svg');
+  margin-left: 16px;
+}
+
+.reset:hover {
+  transform: scale(1.2);
+}
 
 #reset:hover {
+  transform: scale(1.2);
+}
+
+.selectForm {
+  padding-right: 54px;
+}
+
+
+
+.taskStatus {
+  margin-left: 16px;
+  width: 211px;
+}
+
+.edit {
+  background-image: url('assets/edit-black-18dp.svg');
+  margin-left: 16px;
+}
+
+.edit:hover {
   transform: scale(1.2);
 }
 
@@ -144,6 +193,15 @@ button {
   background-image: url('assets/thumb_up_alt-black-18dp.svg');
 }
 .confirmButton:hover {
+  transform: scale(1.2);
+}
+
+.confirm {
+  background-image: url('assets/thumb_up_alt-black-18dp.svg');
+  margin-left: 16px;
+}
+
+.confirm:hover {
   transform: scale(1.2);
 }
 
@@ -184,4 +242,51 @@ button {
 #addChildTask:focus {
   border-bottom: 2px solid #6200ee;
   outline: none;
+}
+
+.cp_ipselect {
+	overflow: hidden;
+	text-align: center;
+}
+.cp_ipselect select {
+	padding-right: 1em;
+	cursor: pointer;
+	text-indent: 0.01px;
+	text-overflow: ellipsis;
+	border: none;
+	outline: none;
+	background: transparent;
+	background-image: none;
+	box-shadow: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+.cp_ipselect select::-ms-expand {
+  display: none;
+}
+.cp_ipselect.cp_sl01 {
+  position: relative;
+  box-sizing: border-box;
+	border: 1px solid #bbbbbb;
+	border-radius: 2px;
+  background: #ffffff;
+  margin-left: 16px;
+  width:210px;
+}
+.cp_ipselect.cp_sl01::before {
+	position: absolute;
+	top: 0.8em;
+	right: 0.9em;
+	width: 0;
+	height: 0;
+	padding: 0;
+	content: '';
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid #666666;
+	pointer-events: none;
+}
+.cp_ipselect.cp_sl01 select {
+	padding: 8px 38px 8px 8px;
+	color: #666666;
 }

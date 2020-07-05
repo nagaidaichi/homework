@@ -13,11 +13,13 @@
 
     <div class="todo__container">
       <input type="text" id="inputTodo" placeholder='TODO' >
-      <select id="select">
-        <option value="" selected>--Please choose the status--</option>
-        <option value="1">DONE</option>
-        <option value="2">WIP</option>
-      </select>
+      <div class="cp_ipselect cp_sl01">
+        <select id="select" required>
+          <option value="" selected>--Please choose the status--</option>
+          <option value="1">DONE</option>
+          <option value="2">WIP</option>
+        </select>
+      </div>
       <button type="button" id="add" onclick="addTask(event)"></button>
       <button type="button" id="reset"></button>
     </div>
@@ -29,6 +31,7 @@
     <script type="text/javascript" src="storage.js"></script>
     <script type="text/javascript" src="view.js"></script>
     <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="ajax_view.js"></script>
     <script type="text/javascript" src="ajax.js"></script>
   </body>
 </html>
